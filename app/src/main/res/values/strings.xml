@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">WebRTCDemo</string>
+    <string name="disconnect_call">Disconnect call</string>
+    <string name="switch_camera">Swich Camera</string>
+    <string name="toggle_mic">Microphone On Off</string>
+    <string name="pref_maxvideobitratevalue_default">1700</string>
+    <string name="pref_videocodec_default">VP8</string>
+    <string name="pref_startaudiobitratevalue_default">32</string>
+    <string name="pref_audiocodec_default">OPUS</string>
+    <string name="connecting_to">Connecting to: %1$s</string>
+    <string name="channel_error_title">Connection error</string>
+    <string name="ok">OK</string>
+
+
+
 </resources>

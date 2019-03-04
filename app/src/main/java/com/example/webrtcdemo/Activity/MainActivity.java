@@ -2,6 +2,7 @@ package com.example.webrtcdemo.Activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -20,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edtRoomNumber;
     private Button btnSubmit;
 
-    private int PERMISSION_ALL_CODE = 1;
+    private int PERMISSION_ALL_CODE = 786;
     private String[] ALL_PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.CHANGE_NETWORK_STATE, Manifest.permission.MODIFY_AUDIO_SETTINGS,
             Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_NETWORK_STATE};
 
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setData() {
         Toast.makeText(MainActivity.this,"Success !!!",Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivity.this, VideoCallActivity.class);
+        intent.putExtra("room_id",edtRoomNumber.getText().toString().trim());
+        startActivity(intent);
     }
 
     private void getIds() {
