@@ -14,11 +14,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
-import org.appspot.apprtc.RoomParametersFetcher.RoomParametersFetcherEvents;
-import org.appspot.apprtc.WebSocketChannelClient.WebSocketChannelEvents;
-import org.appspot.apprtc.WebSocketChannelClient.WebSocketConnectionState;
-import org.appspot.apprtc.util.AsyncHttpURLConnection;
-import org.appspot.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.example.webrtcdemo.WebRTCLib.util.AsyncHttpURLConnection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +32,7 @@ import org.webrtc.SessionDescription;
  * Messages to other party (with local Ice candidates and answer SDP) can
  * be sent after WebSocket connection is established.
  */
-public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelEvents {
+public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelClient.WebSocketChannelEvents {
   private static final String TAG = "WSRTCClient";
   private static final String ROOM_JOIN = "join";
   private static final String ROOM_MESSAGE = "message";
@@ -95,7 +92,7 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelEvents 
     roomState = ConnectionState.NEW;
     wsClient = new WebSocketChannelClient(handler, this);
 
-    RoomParametersFetcherEvents callbacks = new RoomParametersFetcherEvents() {
+    RoomParametersFetcher.RoomParametersFetcherEvents callbacks = new RoomParametersFetcher.RoomParametersFetcherEvents() {
       @Override
       public void onSignalingParametersReady(final SignalingParameters params) {
         WebSocketRTCClient.this.handler.post(new Runnable() {
@@ -290,7 +287,7 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelEvents 
   // (passed to WebSocket client constructor).
   @Override
   public void onWebSocketMessage(final String msg) {
-    if (wsClient.getState() != WebSocketConnectionState.REGISTERED) {
+    if (wsClient.getState() != WebSocketChannelClient.WebSocketConnectionState.REGISTERED) {
       Log.e(TAG, "Got WebSocket message in non registered state.");
       return;
     }
@@ -386,7 +383,7 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelEvents 
     }
     Log.d(TAG, "C->GAE: " + logInfo);
     AsyncHttpURLConnection httpConnection =
-        new AsyncHttpURLConnection("POST", url, message, new AsyncHttpEvents() {
+        new AsyncHttpURLConnection("POST", url, message, new AsyncHttpURLConnection.AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             reportError("GAE POST error: " + errorMessage);

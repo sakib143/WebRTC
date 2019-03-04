@@ -2,9 +2,12 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
+
+
+
     defaultConfig {
         applicationId "com.example.webrtcdemo"
-        minSdkVersion 16
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -34,4 +37,5 @@ dependencies {
 
     implementation 'org.webrtc:google-webrtc:1.0.22672'
     implementation 'com.android.support:support-annotations:28.0.0'
+//    implementation files('libs/autobanh.jar')
 }

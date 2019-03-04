@@ -12,9 +12,8 @@ package com.example.webrtcdemo.WebRTCLib;
 
 import android.util.Log;
 
-import org.appspot.apprtc.AppRTCClient.SignalingParameters;
-import org.appspot.apprtc.util.AsyncHttpURLConnection;
-import org.appspot.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.example.webrtcdemo.WebRTCLib.util.AsyncHttpURLConnection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +48,7 @@ public class RoomParametersFetcher {
      * Callback fired once the room's signaling parameters
      * SignalingParameters are extracted.
      */
-    void onSignalingParametersReady(final SignalingParameters params);
+    void onSignalingParametersReady(final AppRTCClient.SignalingParameters params);
 
     /**
      * Callback for room parameters extraction error.
@@ -67,7 +66,7 @@ public class RoomParametersFetcher {
   public void makeRequest() {
     Log.d(TAG, "Connecting to room: " + roomUrl);
     AsyncHttpURLConnection httpConnection =
-        new AsyncHttpURLConnection("POST", roomUrl, roomMessage, new AsyncHttpEvents() {
+        new AsyncHttpURLConnection("POST", roomUrl, roomMessage, new AsyncHttpURLConnection.AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             Log.e(TAG, "Room connection error: " + errorMessage);
@@ -149,7 +148,7 @@ public class RoomParametersFetcher {
         }
       }
 
-      SignalingParameters params = new SignalingParameters(
+      AppRTCClient.SignalingParameters params = new AppRTCClient.SignalingParameters(
           iceServers, initiator, clientId, wssUrl, wssPostUrl, offerSdp, iceCandidates);
       events.onSignalingParametersReady(params);
     } catch (JSONException e) {

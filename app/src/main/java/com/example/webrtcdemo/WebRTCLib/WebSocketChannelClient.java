@@ -13,8 +13,8 @@ package com.example.webrtcdemo.WebRTCLib;
 import android.os.Handler;
 import android.util.Log;
 
-import org.appspot.apprtc.util.AsyncHttpURLConnection;
-import org.appspot.apprtc.util.AsyncHttpURLConnection.AsyncHttpEvents;
+import com.example.webrtcdemo.WebRTCLib.util.AsyncHttpURLConnection;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,7 +217,7 @@ public class WebSocketChannelClient {
     String postUrl = postServerUrl + "/" + roomID + "/" + clientID;
     Log.d(TAG, "WS " + method + " : " + postUrl + " : " + message);
     AsyncHttpURLConnection httpConnection =
-        new AsyncHttpURLConnection(method, postUrl, message, new AsyncHttpEvents() {
+        new AsyncHttpURLConnection(method, postUrl, message, new AsyncHttpURLConnection.AsyncHttpEvents() {
           @Override
           public void onHttpError(String errorMessage) {
             reportError("WS " + method + " error: " + errorMessage);
