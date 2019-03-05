@@ -7,7 +7,7 @@
     tools:context=".Activity.VideoCallActivity">
 
     <org.webrtc.SurfaceViewRenderer
-        android:id="@+id/fullscreen_video_view"
+        android:id="@+id/fullscreenRenderer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />

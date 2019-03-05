@@ -16,6 +16,7 @@ import com.example.webrtcdemo.R;
 import com.example.webrtcdemo.WebRTCLib.AppRTCClient;
 import com.example.webrtcdemo.WebRTCLib.PeerConnectionClient;
 import com.example.webrtcdemo.WebRTCLib.WebSocketRTCClient;
+import com.example.webrtcdemo.WebRTCLib.util.AsyncHttpURLConnection;
 
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
@@ -37,15 +38,18 @@ import java.util.List;
 public class VideoCallActivity extends AppCompatActivity implements AppRTCClient.SignalingEvents,
         PeerConnectionClient.PeerConnectionEvents {
 
-    private static final String TAG = "CallActivity";
-    private static final String APPRTC_URL = "https://appr.tc";
+    private static final String TAG = "VideoCallActivity ==> ";
     private static final String UPPER_ALPHA_DIGITS = "ACEFGHJKLMNPQRUVWXY123456789";
 
     // Peer connection statistics callback period in ms.
     private static final int STAT_CALLBACK_PERIOD = 1000;
-    private final ProxyRenderer remoteProxyRenderer = new ProxyRenderer();
+
+
+
     private final ProxyVideoSink localProxyVideoSink = new ProxyVideoSink();
+    private final ProxyRenderer remoteProxyRenderer = new ProxyRenderer();
     private final List<VideoRenderer.Callbacks> remoteRenderers = new ArrayList<>();
+
     private PeerConnectionClient peerConnectionClient = null;
     private AppRTCClient appRtcClient;
     private AppRTCClient.SignalingParameters signalingParameters;
@@ -73,11 +77,11 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
 
         iceConnected = false;
         signalingParameters = null;
-        String randomRoomID = getIntent().getStringExtra("room_id");
+        String strRoomId = getIntent().getStringExtra("room_id");
 
         // Create UI controls.
         pipRenderer = findViewById(R.id.pip_video_view);
-        fullscreenRenderer = findViewById(R.id.fullscreen_video_view);
+        fullscreenRenderer = findViewById(R.id.fullscreenRenderer);
 
         disconnectButton = findViewById(R.id.button_call_disconnect);
         cameraSwitchButton = findViewById(R.id.button_call_switch_camera);
@@ -131,7 +135,7 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
 
 
         // Connect video call to the random room
-        connectVideoCall(randomRoomID);
+        connectVideoCall(strRoomId);
     }
 
     // Create a random string
@@ -146,7 +150,7 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
 
     // Join video call with randomly generated roomId
     private void connectVideoCall(String roomId) {
-        Uri roomUri = Uri.parse(APPRTC_URL);
+        Uri roomUri = Uri.parse(AsyncHttpURLConnection.APP_RTC_URL);
 
         int videoWidth = 0;
         int videoHeight = 0;
@@ -178,7 +182,7 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
         // DirectRTCClient could be used for point-to-point connection
         appRtcClient = new WebSocketRTCClient(this);
         // Create connection parameters.
-        roomConnectionParameters = new AppRTCClient.RoomConnectionParameters(roomUri.toString(), roomId,false,null);
+        roomConnectionParameters = new AppRTCClient.RoomConnectionParameters(roomUri.toString(), roomId, false, null);
 
         peerConnectionClient.createPeerConnectionFactory(getApplicationContext(), peerConnectionParameters, VideoCallActivity.this);
 
@@ -281,7 +285,7 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
 
     // Log |msg| and Toast about it.
     private void logAndToast(String msg) {
-        Log.d(TAG, msg);
+        Log.e(TAG, msg);
         if (logToast != null) {
             logToast.cancel();
         }
@@ -349,8 +353,17 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
     private void setSwappedFeeds(boolean isSwappedFeeds) {
         Logging.d(TAG, "setSwappedFeeds: " + isSwappedFeeds);
         this.isSwappedFeeds = isSwappedFeeds;
-        localProxyVideoSink.setTarget(isSwappedFeeds ? fullscreenRenderer : pipRenderer);
-        remoteProxyRenderer.setTarget(isSwappedFeeds ? pipRenderer : fullscreenRenderer);
+//        localProxyVideoSink.setTarget(isSwappedFeeds ? fullscreenRenderer : pipRenderer);
+//        remoteProxyRenderer.setTarget(isSwappedFeeds ? pipRenderer : fullscreenRenderer);
+
+        if (isSwappedFeeds) {
+            localProxyVideoSink.setTarget(fullscreenRenderer);
+            remoteProxyRenderer.setTarget(pipRenderer);
+        } else {
+            localProxyVideoSink.setTarget(pipRenderer);
+            remoteProxyRenderer.setTarget(fullscreenRenderer);
+        }
+
         fullscreenRenderer.setMirror(isSwappedFeeds);
         pipRenderer.setMirror(!isSwappedFeeds);
     }
@@ -386,8 +399,10 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
             if (params.iceCandidates != null) {
                 // Add remote ICE candidates from room.
                 for (IceCandidate iceCandidate : params.iceCandidates) {
+                    Log.e(TAG,"if condition !!!");
                     peerConnectionClient.addRemoteIceCandidate(iceCandidate);
                 }
+
             }
         }
     }
@@ -487,7 +502,7 @@ public class VideoCallActivity extends AppCompatActivity implements AppRTCClient
                     }
                 }
                 if (peerConnectionParameters.videoMaxBitrate > 0) {
-                    Log.d(TAG, "Set video maximum bitrate: " + peerConnectionParameters.videoMaxBitrate);
+                    Log.e(TAG, "Set video maximum bitrate: " + peerConnectionParameters.videoMaxBitrate);
                     peerConnectionClient.setVideoMaxBitrate(peerConnectionParameters.videoMaxBitrate);
                 }
             }

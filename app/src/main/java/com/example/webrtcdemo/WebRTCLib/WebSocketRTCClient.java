@@ -33,7 +33,7 @@ import org.webrtc.SessionDescription;
  * be sent after WebSocket connection is established.
  */
 public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelClient.WebSocketChannelEvents {
-  private static final String TAG = "WSRTCClient";
+  private static final String TAG = "WebSocketRTCClient ==>";
   private static final String ROOM_JOIN = "join";
   private static final String ROOM_MESSAGE = "message";
   private static final String ROOM_LEAVE = "leave";
@@ -88,7 +88,7 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelClient.
   // Connects to room - function runs on a local looper thread.
   private void connectToRoomInternal() {
     String connectionUrl = getConnectionUrl(connectionParameters);
-    Log.d(TAG, "Connect to room: " + connectionUrl);
+    Log.e(TAG, "Connect to room: WebSocketRTCClient ==> " + connectionUrl);
     roomState = ConnectionState.NEW;
     wsClient = new WebSocketChannelClient(handler, this);
 
@@ -127,6 +127,10 @@ public class WebSocketRTCClient implements AppRTCClient, WebSocketChannelClient.
 
   // Helper functions to get connection, post message and leave message URLs
   private String getConnectionUrl(RoomConnectionParameters connectionParameters) {
+    Log.e(TAG,"Connecttion URL =>" + connectionParameters.roomUrl );
+    Log.e(TAG,"Connecttion ROOM ID =>" + connectionParameters.roomId);
+
+
     return connectionParameters.roomUrl + "/" + ROOM_JOIN + "/" + connectionParameters.roomId
         + getQueryString(connectionParameters);
   }

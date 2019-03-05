@@ -35,7 +35,7 @@ import de.tavendo.autobahn.WebSocketException;
  * All events are dispatched on the same thread.
  */
 public class WebSocketChannelClient {
-  private static final String TAG = "WSChannelRTCClient";
+  private static final String TAG = "WebSocket ==>";
   private static final int CLOSE_TIMEOUT = 1000;
   private final WebSocketChannelEvents events;
   private final Handler handler;
@@ -91,7 +91,7 @@ public class WebSocketChannelClient {
     postServerUrl = postUrl;
     closeEvent = false;
 
-    Log.d(TAG, "Connecting WebSocket to: " + wsUrl + ". Post URL: " + postUrl);
+    Log.e(TAG, "Connecting WebSocket to: " + wsUrl + ". Post URL: " + postUrl);
     ws = new WebSocketConnection();
     wsObserver = new WebSocketObserver();
     try {

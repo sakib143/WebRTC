@@ -23,7 +23,10 @@ import java.util.Scanner;
  */
 public class AsyncHttpURLConnection {
   private static final int HTTP_TIMEOUT_MS = 8000;
-  private static final String HTTP_ORIGIN = "https://appr.tc";
+  public static final String APP_RTC_URL = "https://appr.tc";
+//  public static final String APP_RTC_URL = "https://user.gohealthnow.com/webrtc-core";
+
+
   private final String method;
   private final String url;
   private final String message;
@@ -66,7 +69,7 @@ public class AsyncHttpURLConnection {
       connection.setConnectTimeout(HTTP_TIMEOUT_MS);
       connection.setReadTimeout(HTTP_TIMEOUT_MS);
       // TODO(glaznev) - query request origin from pref_room_server_url_key preferences.
-      connection.addRequestProperty("origin", HTTP_ORIGIN);
+      connection.addRequestProperty("origin", APP_RTC_URL);
       boolean doOutput = false;
       if (method.equals("POST")) {
         doOutput = true;
