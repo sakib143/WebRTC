@@ -34,7 +34,7 @@ import java.util.Scanner;
  * parameters to use with that room.
  */
 public class RoomParametersFetcher {
-    private static final String TAG = "RoomRTCClient";
+    private static final String TAG = "RoomParmFetcher ==> ";
     private static final int TURN_HTTP_TIMEOUT_MS = 5000;
     private final RoomParametersFetcherEvents events;
     private final String roomUrl;
@@ -64,7 +64,7 @@ public class RoomParametersFetcher {
     }
 
     public void makeRequest() {
-        Log.d(TAG, "Connecting to room: " + roomUrl);
+        Log.e(TAG, "Connecting to room: " + roomUrl);
         AsyncHttpURLConnection httpConnection =
                 new AsyncHttpURLConnection("POST", roomUrl, roomMessage, new AsyncHttpURLConnection.AsyncHttpEvents() {
                     @Override
@@ -82,7 +82,7 @@ public class RoomParametersFetcher {
     }
 
     private void roomHttpResponseParse(String response) {
-        Log.d(TAG, "Room response: " + response);
+        Log.e(TAG, "Room response: " + response);
         try {
             List<IceCandidate> iceCandidates = null;
             SessionDescription offerSdp = null;
@@ -110,7 +110,7 @@ public class RoomParametersFetcher {
                     String messageString = messages.getString(i);
                     JSONObject message = new JSONObject(messageString);
                     String messageType = message.getString("type");
-                    Log.d(TAG, "GAE->C #" + i + " : " + messageString);
+                    Log.e(TAG, "GAE->C #" + i + " : " + messageString);
                     if (messageType.equals("offer")) {
                         offerSdp = new SessionDescription(
                                 SessionDescription.Type.fromCanonicalForm(messageType), message.getString("sdp"));
@@ -123,16 +123,16 @@ public class RoomParametersFetcher {
                     }
                 }
             }
-            Log.d(TAG, "RoomId: " + roomId + ". ClientId: " + clientId);
-            Log.d(TAG, "Initiator: " + initiator);
-            Log.d(TAG, "WSS url: " + wssUrl);
-            Log.d(TAG, "WSS POST url: " + wssPostUrl);
+            Log.e(TAG, "RoomId: " + roomId + ". ClientId: " + clientId);
+            Log.e(TAG, "Initiator: " + initiator);
+            Log.e(TAG, "WSS url: " + wssUrl);
+            Log.e(TAG, "WSS POST url: " + wssPostUrl);
 
             List<PeerConnection.IceServer> iceServers =
                     iceServersFromPCConfigJSON(roomJson.getString("pc_config"));
             boolean isTurnPresent = false;
             for (PeerConnection.IceServer server : iceServers) {
-                Log.d(TAG, "IceServer: " + server);
+                Log.e(TAG, "IceServer: " + server);
                 for (String uri : server.urls) {
                     if (uri.startsWith("turn:")) {
                         isTurnPresent = true;
@@ -145,7 +145,7 @@ public class RoomParametersFetcher {
                 List<PeerConnection.IceServer> turnServers =
                         requestTurnServers(roomJson.getString("ice_server_url"));
                 for (PeerConnection.IceServer turnServer : turnServers) {
-                    Log.d(TAG, "TurnServer: " + turnServer);
+                    Log.e(TAG, "TurnServer: " + turnServer);
                     iceServers.add(turnServer);
                 }
             }
@@ -165,7 +165,7 @@ public class RoomParametersFetcher {
     private List<PeerConnection.IceServer> requestTurnServers(String url)
             throws IOException, JSONException {
         List<PeerConnection.IceServer> turnServers = new ArrayList<>();
-        Log.d(TAG, "Request TURN from: " + url);
+        Log.e(TAG, "Request TURN from: " + url);
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setDoOutput(true);
         connection.setRequestProperty("REFERER", AsyncHttpURLConnection.APP_RTC_URL);
@@ -179,7 +179,7 @@ public class RoomParametersFetcher {
         InputStream responseStream = connection.getInputStream();
         String response = drainStream(responseStream);
         connection.disconnect();
-        Log.d(TAG, "TURN response: " + response);
+        Log.e(TAG, "TURN response: " + response);
         JSONObject responseJSON = new JSONObject(response);
         JSONArray iceServers = responseJSON.getJSONArray("iceServers");
         for (int i = 0; i < iceServers.length(); ++i) {
